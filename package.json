@@ -18,6 +18,8 @@
   "homepage": "https://github.com/PatrickSison/snippy-bot#readme",
   "dependencies": {
     "discord.js": "^12.0.1",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "youtube-search": "^1.1.4",
+    "ytdl-core": "^2.0.0"
   }
 }
