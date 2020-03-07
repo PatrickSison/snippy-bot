@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const config = require('./config/default.json');
 
-console.log('Starting...')
+console.log('Starting...');
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -39,10 +39,6 @@ client.on('message', msg => {
 				msg.channel.send('https://media.giphy.com/media/wIyvbQa4g7CajwxkD5/giphy.gif');
 		}
 	}
-
-    msg.channel.send('https://media.giphy.com/media/wIyvbQa4g7CajwxkD5/giphy.gif');
-    msg.channel.send('LIGMA BALLS');
-  }
 });
 
 client.login(process.env.DISCORD_SECRET);
