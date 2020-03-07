@@ -5,3 +5,5 @@ services:
     volumes:
       - .:/app
     command: bash -c "cd /app && node ."
+    environment:
+      DISCORD_SECRET: ${DISCORD_SECRET}
