@@ -4,4 +4,5 @@ services:
     image: nodejs
     build: .
     volumes:
-      - .:/tmp
+      - .:/app
+    command: bash -c "cd /app && node ."
