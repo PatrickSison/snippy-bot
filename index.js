@@ -20,26 +20,26 @@ client.once('disconnect', () => {
 
 const { prefix } = config;
 
-client.on('message', msg => {
+client.on('msg', msg => {
 
 	if (msg.author.bot) return;
 
 	msg.content = msg.content.toLowerCase();
 
 	if (msg.content.startsWith(prefix)) {
-		const serverQueue = queue.get(message.guild.id);
+		const serverQueue = queue.get(msg.guild.id);
 
-		if (message.content.startsWith(`${prefix}play`)) {
-			execute(message, serverQueue);
+		if (msg.content.startsWith(`${prefix}play`)) {
+			execute(msg, serverQueue);
 			return;
-		} else if (message.content.startsWith(`${prefix}skip`)) {
-			skip(message, serverQueue);
+		} else if (msg.content.startsWith(`${prefix}skip`)) {
+			skip(msg, serverQueue);
 			return;
-		} else if (message.content.startsWith(`${prefix}stop`)) {
-			stop(message, serverQueue);
+		} else if (msg.content.startsWith(`${prefix}stop`)) {
+			stop(msg, serverQueue);
 			return;
 		} else {
-			message.channel.send('You need to enter a valid command!')
+			msg.channel.send('You need to enter a valid command!')
 		}
 	} else {
 		//
@@ -68,14 +68,14 @@ client.on('message', msg => {
 	}
 });
 
-async function execute(message, serverQueue) {
-	const args = message.content.split(' ');
+async function execute(msg, serverQueue) {
+	const args = msg.content.split(' ');
 
-	const voiceChannel = message.member.voiceChannel;
-	if (!voiceChannel) return message.channel.send('You need to be in a voice channel to play music!');
-	const permissions = voiceChannel.permissionsFor(message.client.user);
+	const voiceChannel = msg.member.voiceChannel;
+	if (!voiceChannel) return msg.channel.send('You need to be in a voice channel to play music!');
+	const permissions = voiceChannel.permissionsFor(msg.client.user);
 	if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-		return message.channel.send('I need the permissions to join and speak in your voice channel!');
+		return msg.channel.send('I need the permissions to join and speak in your voice channel!');
 	}
 
 	const songInfo = await ytdl.getInfo(args[1]);
@@ -86,7 +86,7 @@ async function execute(message, serverQueue) {
 
 	if (!serverQueue) {
 		const queueContruct = {
-			textChannel: message.channel,
+			textChannel: msg.channel,
 			voiceChannel: voiceChannel,
 			connection: null,
 			songs: [],
@@ -94,35 +94,35 @@ async function execute(message, serverQueue) {
 			playing: true,
 		};
 
-		queue.set(message.guild.id, queueContruct);
+		queue.set(msg.guild.id, queueContruct);
 
 		queueContruct.songs.push(song);
 
 		try {
 			var connection = await voiceChannel.join();
 			queueContruct.connection = connection;
-			play(message.guild, queueContruct.songs[0]);
+			play(msg.guild, queueContruct.songs[0]);
 		} catch (err) {
 			console.log(err);
-			queue.delete(message.guild.id);
-			return message.channel.send(err);
+			queue.delete(msg.guild.id);
+			return msg.channel.send(err);
 		}
 	} else {
 		serverQueue.songs.push(song);
 		console.log(serverQueue.songs);
-		return message.channel.send(`${song.title} has been added to the queue!`);
+		return msg.channel.send(`${song.title} has been added to the queue!`);
 	}
 
 }
 
-function skip(message, serverQueue) {
-	if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to stop the music!');
-	if (!serverQueue) return message.channel.send('There is no song that I could skip!');
+function skip(msg, serverQueue) {
+	if (!msg.member.voiceChannel) return msg.channel.send('You have to be in a voice channel to stop the music!');
+	if (!serverQueue) return msg.channel.send('There is no song that I could skip!');
 	serverQueue.connection.dispatcher.end();
 }
 
-function stop(message, serverQueue) {
-	if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to stop the music!');
+function stop(msg, serverQueue) {
+	if (!msg.member.voiceChannel) return msg.channel.send('You have to be in a voice channel to stop the music!');
 	serverQueue.songs = [];
 	serverQueue.connection.dispatcher.end();
 }
