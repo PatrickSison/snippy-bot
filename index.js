@@ -5,6 +5,8 @@ const ytdl = require('ytdl-core');
 const client = new Discord.Client();
 const queue = new Map();
 
+console.log('Starting...');
+
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -20,11 +22,9 @@ client.once('disconnect', () => {
 
 const { prefix } = config;
 
-client.on('msg', msg => {
-
+client.on('message', msg => {
 	if (msg.author.bot) return;
 
-	msg.content = msg.content.toLowerCase();
 
 	if (msg.content.startsWith(prefix)) {
 		const serverQueue = queue.get(msg.guild.id);
@@ -42,7 +42,7 @@ client.on('msg', msg => {
 			msg.channel.send('You need to enter a valid command!')
 		}
 	} else {
-		//
+		msg.content = msg.content.toLowerCase();
 		switch (msg.content) {
 			case 're':
 				msg.channel.send('REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
@@ -71,19 +71,23 @@ client.on('msg', msg => {
 async function execute(msg, serverQueue) {
 	const args = msg.content.split(' ');
 
-	const voiceChannel = msg.member.voiceChannel;
+	const voiceChannel = msg.member.voice.channel;
+	
 	if (!voiceChannel) return msg.channel.send('You need to be in a voice channel to play music!');
 	const permissions = voiceChannel.permissionsFor(msg.client.user);
 	if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
 		return msg.channel.send('I need the permissions to join and speak in your voice channel!');
 	}
-
+	
 	const songInfo = await ytdl.getInfo(args[1]);
+	
+	//const songInfo2 = await ytdl.getInfo('test');
+	//console.log(songInfo2);
 	const song = {
 		title: songInfo.title,
 		url: songInfo.video_url,
 	};
-
+	
 	if (!serverQueue) {
 		const queueContruct = {
 			textChannel: msg.channel,
@@ -99,8 +103,10 @@ async function execute(msg, serverQueue) {
 		queueContruct.songs.push(song);
 
 		try {
+			console.log('Attempting to join voice channel');
 			var connection = await voiceChannel.join();
 			queueContruct.connection = connection;
+			console.log('Trying to play?');
 			play(msg.guild, queueContruct.songs[0]);
 		} catch (err) {
 			console.log(err);
@@ -129,13 +135,12 @@ function stop(msg, serverQueue) {
 
 function play(guild, song) {
 	const serverQueue = queue.get(guild.id);
-
+	console.log('HERE');
 	if (!song) {
 		serverQueue.voiceChannel.leave();
 		queue.delete(guild.id);
 		return;
 	}
-
 	const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
 		.on('end', () => {
 			console.log('Music ended!');
