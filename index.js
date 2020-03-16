@@ -81,8 +81,6 @@ async function execute(msg, serverQueue) {
 	
 	const songInfo = await ytdl.getInfo(args[1]);
 	
-	//const songInfo2 = await ytdl.getInfo('test');
-	//console.log(songInfo2);
 	const song = {
 		title: songInfo.title,
 		url: songInfo.video_url,
@@ -106,7 +104,6 @@ async function execute(msg, serverQueue) {
 			console.log('Attempting to join voice channel');
 			var connection = await voiceChannel.join();
 			queueContruct.connection = connection;
-			console.log('Trying to play?');
 			play(msg.guild, queueContruct.songs[0]);
 		} catch (err) {
 			console.log(err);
@@ -135,13 +132,12 @@ function stop(msg, serverQueue) {
 
 function play(guild, song) {
 	const serverQueue = queue.get(guild.id);
-	console.log('HERE');
 	if (!song) {
 		serverQueue.voiceChannel.leave();
 		queue.delete(guild.id);
 		return;
 	}
-	const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+	const dispatcher = serverQueue.connection.play(ytdl(song.url))
 		.on('end', () => {
 			console.log('Music ended!');
 			serverQueue.songs.shift();
