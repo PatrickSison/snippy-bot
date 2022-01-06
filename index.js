@@ -82,6 +82,7 @@ client.on("message", (msg) => {
 async function execute(msg, serverQueue) {
   const searchString = msg.content.split(" ").slice(1).join(" ");
 
+  console.log(`Trying to play "${searchString}"`);
   const voiceChannel = msg.member.voice.channel;
 
   if (!voiceChannel)
