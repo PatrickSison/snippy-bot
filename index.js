@@ -3,7 +3,7 @@ const config = require("./config/default.json");
 const ytdl = require("ytdl-core");
 const ytSearch = require("yt-search");
 
-const client = new Discord.Client();
+const client = new Discord.Client({ intents: [Discord.Intents.ALL] });
 const queue = new Map();
 
 console.log("Starting...");
@@ -114,8 +114,8 @@ async function execute(msg, serverQueue) {
     return msg.channel.send("Shit's broke.");
   }
 
-  console.log('found URL', youtubeLink);
-	const songInfo = await ytdl.getInfo(youtubeLink);
+  console.log("found URL", youtubeLink);
+  const songInfo = await ytdl.getInfo(youtubeLink);
 
   const song = {
     title: songInfo.title,
