@@ -114,7 +114,8 @@ async function execute(msg, serverQueue) {
     return msg.channel.send("Shit's broke.");
   }
 
-  const songInfo = await ytdl.getInfo(youtubeLink);
+  console.log('found URL', youtubeLink);
+	const songInfo = await ytdl.getInfo(youtubeLink);
 
   const song = {
     title: songInfo.title,
