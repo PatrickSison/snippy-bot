@@ -5,6 +5,5 @@ services:
     volumes:
       - .:/app
     command: bash -c "cd /app && node ."
-    restart: on-failure
     environment:
       DISCORD_SECRET: ${DISCORD_SECRET}
