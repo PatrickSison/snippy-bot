@@ -3,7 +3,7 @@ const config = require("./config/default.json");
 const ytdl = require("ytdl-core");
 const ytSearch = require("yt-search");
 
-const client = new Discord.Client({ intents: [Discord.Intents.ALL] });
+const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.DIRECT_MESSAGES, Discord.Intents.FLAGS.GUILDS] });
 const queue = new Map();
 
 console.log("Starting...");
@@ -87,7 +87,7 @@ async function execute(msg, serverQueue) {
 
   if (!voiceChannel)
     return msg.channel.send("You need to be in a voice channel to play music!");
-  const permissions = voiceChannel.permissionsFor(msg.client.user);
+  const permissions = voiceChannel.permissionsFor(BigInt(msg.client.user));
   if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
     return msg.channel.send(
       "I need the permissions to join and speak in your voice channel!"
