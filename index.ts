@@ -4,6 +4,7 @@ import Discord, {
   Events,
   GatewayIntentBits,
   Routes,
+  SlashCommandBuilder,
 } from "discord.js";
 import config from "./config/default.json";
 import ytdl from "ytdl-core";
@@ -13,7 +14,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 type Command = {
-  data: any;
+  data: SlashCommandBuilder;
   execute: (interaction: Interaction) => void;
 };
 
@@ -29,7 +30,7 @@ const client = new Client({
   ],
 });
 
-const commands = new Collection<string, Command>();
+client.commands = new Collection<string, Command>();
 
 const commandsPath = path.join(__dirname, "commands");
 const commandFiles = fs
@@ -39,9 +40,8 @@ const commandFiles = fs
 for (const file of commandFiles) {
   const filePath = path.join(commandsPath, file);
   const command = require(filePath);
-  // Set a new item in the Collection with the key as the command name and the value as the exported module
   if ("data" in command && "execute" in command) {
-    commands.set(command.data.name, command);
+    client.commands.set(command.data.name, command);
   } else {
     console.log(
       `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
@@ -65,7 +65,7 @@ client.once("disconnect", () => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
-  const command = commands.get(interaction.commandName);
+  const command = client.commands.get(interaction.commandName);
 
   if (!command) {
     console.error(`No command matching ${interaction.commandName} was found.`);
