@@ -18,6 +18,8 @@ export async function execute(interaction: CommandInteraction<CacheType>) {
     if (message?.value) {
       const response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
+        max_tokens: 25,
+        temperature: 0.7,
         messages: [{ role: "user", content: String(message?.value) }],
       });
       console.log(
