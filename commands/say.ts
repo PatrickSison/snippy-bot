@@ -18,15 +18,14 @@ export async function execute(interaction: CommandInteraction<CacheType>) {
     if (message?.value) {
       const response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
-        max_tokens: 25,
-        temperature: 0.7,
+        temperature: 0.4,
         messages: [{ role: "user", content: String(message?.value) }],
       });
       console.log(
         `AI Token usage: ${response.data.usage?.total_tokens ?? "???"}`
       );
       await interaction.editReply(
-        `${quote(String(message.value))}${codeBlock(
+        `${quote(String(message.value))}\n${codeBlock(
           String(response.data.choices[0].message?.content)
         )}`
       );
