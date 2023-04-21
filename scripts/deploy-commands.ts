@@ -1,8 +1,7 @@
 import path from "path";
 import fs from "fs";
 import { REST, Routes } from "discord.js";
-import * as dotenv from "dotenv";
-dotenv.config();
+
 const TOKEN = process.env.DISCORD_SECRET || "";
 const CLIENT_ID = process.env.CLIENT_ID || "";
 

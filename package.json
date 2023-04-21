@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "docker-compose up -d",
-    "start:dev": "npm run build && node ./build/index.js",
     "deploy:commands": "npm run build && node ./build/scripts/deploy-commands.js",
     "deploy:ai": "npm run build && node ./build/scripts/init-model.js",
     "build": "tsc",
@@ -23,7 +22,6 @@
   "homepage": "https://github.com/PatrickSison/snippy-bot#readme",
   "dependencies": {
     "discord.js": "^14.9.0",
-    "dotenv": "^16.0.3",
     "ffmpeg-static": "^5.1.0",
     "lodash": "^4.17.21",
     "openai": "^3.2.1",

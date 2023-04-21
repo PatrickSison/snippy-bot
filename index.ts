@@ -2,9 +2,7 @@ import { Collection, GatewayIntentBits } from "discord.js";
 // import ytdl from "ytdl-core";
 import path from "path";
 import fs from "fs";
-import * as dotenv from "dotenv";
 import { Client, Command } from "./types";
-dotenv.config();
 
 const client = new Client({
   intents: [
