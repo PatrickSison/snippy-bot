@@ -4,7 +4,7 @@
   "description": "Snippy bot",
   "main": "index.js",
   "scripts": {
-    "start": "docker compose up -d",
+    "start": "npm run build && docker compose up -d",
     "deploy:commands": "npm run build && node ./build/scripts/deploy-commands.js",
     "deploy:ai": "npm run build && node ./build/scripts/init-model.js",
     "build": "tsc",
